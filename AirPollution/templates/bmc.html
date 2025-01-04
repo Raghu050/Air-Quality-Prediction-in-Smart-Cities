@@ -1,0 +1,175 @@
+{% extends "base.html" %}
+{% block title %}
+{% endblock %}
+
+{% block style %}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        h1, h2 {
+            text-align: center;
+        }
+        table {
+            width: 80%;
+            margin: 0 auto;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 8px;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        canvas {
+            display: block;
+            margin: 20px auto;
+            border: 1px solid #ddd;
+        }
+    </style>
+{% endblock %}
+
+{% block index %}
+{% endblock %}
+
+{% block content %}
+    <h1>Air Pollution in Belgaum by Cities (2017-2023)</h1>
+    <canvas id="districtChart" width="800" height="400"></canvas>
+
+    <h2>Air Pollution Data (2017-2023)</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Year</th>
+                <th>Belgaum</th>
+                <th>Gokak</th>
+                <th>Hukkeri</th>
+                <th>Chikodi</th>
+                <th>Raibag</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>2017</td>
+                <td>175</td>
+                <td>185</td>
+                <td>190</td>
+                <td>195</td>
+                <td>180</td>
+                <td>185</td>
+            </tr>
+            <tr>
+                <td>2018</td>
+                <td>170</td>
+                <td>180</td>
+                <td>195</td>
+                <td>185</td>
+                <td>175</td>
+                <td>180</td>
+            </tr>
+            <tr>
+                <td>2019</td>
+                <td>180</td>
+                <td>190</td>
+                <td>205</td>
+                <td>200</td>
+                <td>185</td>
+                <td>190</td>
+            </tr>
+            <tr>
+                <td>2020</td>
+                <td>175</td>
+                <td>185</td>
+                <td>200</td>
+                <td>195</td>
+                <td>180</td>
+                <td>185</td>
+            </tr>
+            <tr>
+                <td>2021</td>
+                <td>185</td>
+                <td>195</td>
+                <td>200</td>
+                <td>195</td>
+                <td>185</td>
+                <td>190</td>
+            </tr>
+            <tr>
+                <td>2022</td>
+                <td>170</td>
+                <td>180</td>
+                <td>195</td>
+                <td>190</td>
+                <td>175</td>
+                <td>180</td>
+            </tr>
+            <tr>
+                <td>2023</td>
+                <td>180</td>
+                <td>185</td>
+                <td>200</td>
+                <td>195</td>
+                <td>185</td>
+                <td>190</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <script>
+        // Sample data (replace this with actual data)
+        const districts = ['Belgaum', 'Belgaum City', 'Gokak', 'Hukkeri', 'Chikodi', 'Raibag'];
+        const years = ['2017', '2018', '2019', '2020', '2021', '2022', '2023'];
+        const pollutionData = [
+            [175, 170, 180, 175, 185, 170], // Belgaum
+            [185, 180, 190, 185, 195, 180], // Belgaum City
+            [190, 195, 205, 200, 200, 195], // Gokak
+            [195, 185, 200, 195, 195, 190], // Hukkeri
+            [180, 175, 185, 180, 185, 175], // Chikodi
+            [185, 180, 190, 185, 190, 180]  // Raibag
+        ];
+
+        // Create a dataset for each district
+        const datasets = [];
+        for (let i = 0; i < districts.length; i++) {
+            datasets.push({
+                label: districts[i],
+                data: pollutionData[i],
+                fill: false,
+                borderColor: getRandomColor(),
+                tension: 0.4
+            });
+        }
+
+        // Create the chart
+        const ctx = document.getElementById('districtChart').getContext('2d');
+        const districtChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: years,
+                datasets: datasets
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Function to generate random colors
+        function getRandomColor() {
+            const letters = '0123456789ABCDEF';
+            let color = '#';
+            for (let i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }
+    </script>
+{% endblock %}

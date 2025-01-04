@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+{% block title %}
+{% endblock %}
+
+{% block style %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>India Air Pollution (2017-2023)</title>
+    <!-- Include Plotly.js library -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+{% endblock %}
+
+{% block index %}
+{% endblock %}
+
+{% block content %}
+    <h1>Air Pollution in India (2017-2023)</h1>
+    <table>
+        <tr>
+            <th>Year</th>
+            <th>Air Quality Index (AQI)</th>
+            <th>City/Region</th>
+        </tr>
+        <tr>
+            <td>2017</td>
+            <td>200</td>
+            <td>New Delhi</td>
+        </tr>
+        <tr>
+            <td>2018</td>
+            <td>180</td>
+            <td>Mumbai</td>
+        </tr>
+        <tr>
+            <td>2019</td>
+            <td>220</td>
+            <td>Bengaluru</td>
+        </tr>
+        <tr>
+            <td>2020</td>
+            <td>190</td>
+            <td>Chennai</td>
+        </tr>
+        <tr>
+            <td>2021</td>
+            <td>210</td>
+            <td>Kolkata</td>
+        </tr>
+        <tr>
+            <td>2022</td>
+            <td>195</td>
+            <td>Hyderabad</td>
+        </tr>
+        <tr>
+            <td>2023</td>
+            <td>205</td>
+            <td>Pune</td>
+        </tr>
+    </table>
+
+    <!-- Container for the plotly chart -->
+    <div id="chart"></div>
+
+    <script>
+        // Define data for the plotly chart
+        var data = [{
+            x: ['2017', '2018', '2019', '2020', '2021', '2022', '2023'],
+            y: [200, 180, 220, 190, 210, 195, 205],
+            type: 'scatter',
+            mode: 'lines+markers',
+            marker: {
+                color: 'blue',
+                size: 8
+            },
+            line: {
+                color: 'blue',
+                width: 2
+            }
+        }];
+
+        // Define layout options for the plotly chart
+        var layout = {
+            title: 'Air Quality Index (AQI) over the Years',
+            xaxis: {
+                title: 'Year'
+            },
+            yaxis: {
+                title: 'AQI'
+            }
+        };
+
+        // Render the plotly chart
+        Plotly.newPlot('chart', data, layout);
+    </script>
+
+{% endblock %}
+

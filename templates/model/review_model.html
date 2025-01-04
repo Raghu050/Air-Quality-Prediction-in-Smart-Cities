@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}Model{% endblock %}
+
+{% block content %}
+    <h1>Model Prediction</h1>
+    <form id="predictionForm">
+        <label for="review_text">Enter Review Text:</label>
+        <textarea id="review_text" name="review_text" rows="4" cols="50"></textarea><br>
+        <button type="button" onclick="predict()">Predict</button>
+    </form>
+    <p id="result"></p>
+    <script>
+        function predict() {
+            var reviewText = document.getElementById('review_text').value;
+            var formData = new FormData();
+            formData.append('review_text', reviewText);
+
+            // Get the CSRF token from the cookie
+            var csrftoken = getCookie('csrftoken');
+
+            fetch('/predict/', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': csrftoken
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('result').innerText = 'Prediction: ' + data.prediction;
+            });
+        }
+
+        // Function to get the CSRF token from cookies
+        function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = cookies[i].trim();
+                    // Check if the cookie name matches the desired name
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+    </script>
+{% endblock %}

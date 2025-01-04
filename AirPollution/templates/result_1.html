@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}{% endblock %}
+
+{% block style %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Result</title>
+{% endblock %}
+
+{% block index %}
+{% endblock %}
+
+{% block content %}
+
+<div class="container mt-5" style="color: {{ air_quality_instance.color }}">
+    <h1>Air Quality Result</h1>
+    <p>Submitted Air Quality Data:</p>
+    <ul>
+        <p><strong>District:</strong> {{ air_quality_instance.District }}</p>
+        <p><strong>CO:</strong> {{ air_quality_instance.CO }}</p>
+        <p><strong>NMHC:</strong> {{ air_quality_instance.NMHC }}</p>
+        <p><strong>C6H6:</strong> {{ air_quality_instance.C6H6 }}</p>
+        <p><strong>NO2:</strong> {{ air_quality_instance.NO2 }}</p>
+        <p><strong>Temperature:</strong> {{ air_quality_instance.temp }}</p>
+        <p><strong>Humidity:</strong> {{ air_quality_instance.humidity }}</p>
+        <p><strong>Air Quality Index (AQI):</strong> {{ air_quality_instance.AQI }}</p>
+        <p><strong>Level of Health Concern:</strong> {{ air_quality_instance.level_of_concern }}</p>
+    </ul>
+</div>
+
+{% endblock %}

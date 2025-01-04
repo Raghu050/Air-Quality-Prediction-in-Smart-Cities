@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}Register{% endblock %}
+{% block style %}
+<style>
+    /* Add your custom styles here */
+    /* For example, to customize the card background color */
+    .card {
+        background-color: #37474f; /* Dark grey */
+    }
+</style>
+{% endblock %}
+
+{% block index %}
+{% endblock %}
+
+{% block content %}
+<section class="vh-100">
+    <div class="container">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col-12 col-md-6">
+                <div class="card">
+                    <div class="card-content">
+                        <span class="card-title" style="color: rgb(6, 8, 9);">Register</span><br><br>
+                        <p class="text-black-50">
+                            Please, use the following form to Register.
+                        </p><br>
+                        <form method="post" action="">
+                            {% csrf_token %}
+                            <div class="input-field">
+                                {{ user_form.username.label_tag }}<br>
+                                {{ user_form.username }}
+                            </div>
+                            <div class="input-field">
+                                {{ user_form.password.label_tag }}<br>
+                                {{ user_form.password }}
+                            </div>
+                            <div class="input-field">
+                                {{ user_form.password2.label_tag }}<br>
+                                {{ user_form.password2 }}
+                            </div>
+                            <button class="btn waves-effect waves-light" type="submit">Create Account</button>
+                        </form>
+                        <p class="text-white-50">Already have an account? <a href="{% url 'login' %}" class="text-black-50">Sign In</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

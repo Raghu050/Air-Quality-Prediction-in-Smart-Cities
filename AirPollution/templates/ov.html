@@ -1,0 +1,230 @@
+{% extends "base.html" %}
+{% block title %}
+{% endblock %}
+
+{% block style %}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        h1, h2 {
+            text-align: center;
+        }
+        table {
+            width: 80%;
+            margin: 0 auto;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 8px;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        canvas {
+            display: block;
+            margin: 20px auto;
+            border: 1px solid #ddd;
+        }
+    </style>
+{% endblock %}
+
+{% block index %}
+{% endblock %}
+
+{% block content %}
+    <h1>Air Pollution in Karnataka Districts (2017-2023)</h1>
+    <canvas id="karnatakaDistrictChart" width="800" height="400"></canvas>
+
+    <h2>Air Pollution Data for Karnataka Districts (2017-2023)</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Year</th>
+                <th>Bengaluru</th>
+                <th>Mysuru</th>
+                <th>Hubballi</th>
+                <th>Mangaluru</th>
+                <th>Belagavi</th>
+                <th>Ballari</th>
+                <th>Bidar</th>
+                <th>Gulbarga</th>
+                <th>Davanagere</th>
+                <th>Udupi</th>
+                <th>Bijapur</th>
+                <th>Chikkamagaluru</th>
+                <th>Hassan</th>
+                <th>Tumakuru</th>
+                <th>Shivamogga</th>
+                <th>Raichur</th>
+                <th>Bagalkot</th>
+                <th>Dharwad</th>
+                <th>Kolar</th>
+                <th>Dakshina Kannada</th>
+                <th>Vijayapura</th>
+                <th>Koppal</th>
+                <th>Chitradurga</th>
+                <th>Ramanagara</th>
+                <th>Yadgir</th>
+                <th>Chikkaballapura</th>
+                <th>Uttara Kannada</th>
+                <th>Chamarajanagar</th>
+                <th>Haveri</th>
+                <th>Kodagu</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>2017</td>
+                <td>220</td>
+                <td>180</td>
+                <td>200</td>
+                <td>190</td>
+                <td>210</td>
+                <td>195</td>
+                <td>205</td>
+                <td>190</td>
+                <td>180</td>
+                <td>175</td>
+                <td>185</td>
+                <td>190</td>
+                <td>195</td>
+                <td>200</td>
+                <td>210</td>
+                <td>195</td>
+                <td>200</td>
+                <td>190</td>
+                <td>185</td>
+                <td>180</td>
+                <td>185</td>
+                <td>180</td>
+                <td>185</td>
+                <td>190</td>
+                <td>195</td>
+                <td>200</td>
+                <td>185</td>
+                <td>190</td>
+                <td>180</td>
+                <td>175</td>
+                <td>185</td>
+            </tr>
+            <tr>
+                <td>2018</td>
+                <td>210</td>
+                <td>185</td>
+                <td>190</td>
+                <td>185</td>
+                <td>205</td>
+                <td>190</td>
+                <td>200</td>
+                <td>185</td>
+                <td>175</td>
+                <td>170</td>
+                <td>180</td>
+                <td>185</td>
+                <td>190</td>
+                <td>195</td>
+                <td>205</td>
+                <td>190</td>
+                <td>195</td>
+                <td>185</td>
+                <td>180</td>
+                <td>175</td>
+                <td>180</td>
+                <td>175</td>
+                <td>180</td>
+                <td>185</td>
+                <td>190</td>
+                <td>195</td>
+                <td>185</td>
+                <td>190</td>
+                <td>180</td>
+                <td>170</td>
+                <td>180</td>
+            </tr>
+            <!-- Add data for other years -->
+        </tbody>
+    </table>
+
+    <script>
+        // Sample data (replace this with actual data)
+        const karnatakaDistricts = ['Bengaluru', 'Mysuru', 'Hubballi', 'Mangaluru', 'Belagavi', 'Ballari', 'Bidar', 'Gulbarga', 'Davanagere', 'Udupi', 'Bijapur', 'Chikkamagaluru', 'Hassan', 'Tumakuru', 'Shivamogga', 'Raichur', 'Bagalkot', 'Dharwad', 'Kolar', 'Dakshina Kannada', 'Vijayapura', 'Koppal', 'Chitradurga', 'Ramanagara', 'Yadgir', 'Chikkaballapura', 'Uttara Kannada', 'Chamarajanagar', 'Haveri', 'Kodagu'];
+        const karnatakaPollutionData = [
+            [220, 180, 200, 190, 210, 195, 205, 190, 180, 175, 185, 190, 195, 200, 210, 195, 200, 190, 185, 180, 185, 180, 185, 190, 195, 200, 185, 190, 180, 175, 185], // Bengaluru
+            [180, 185, 190, 185, 205, 190, 200, 185, 175, 170, 180, 185, 190, 195, 205, 190, 195, 185, 180, 175, 180, 175, 180, 185, 190, 195, 185, 190, 180, 170, 180], // Mysuru
+            [200, 190, 210, 195, 205, 190, 200, 185, 175, 170, 180, 185, 190, 195, 205, 190, 195, 185, 180, 175, 180, 175, 180, 185, 190, 195, 185, 190, 180, 170, 180], // Hubballi
+            [190, 185, 195, 185, 200, 185, 195, 185, 175, 170, 180, 185, 190, 195, 200, 190, 195, 185, 180, 175, 180, 175, 180, 185, 190, 195, 185, 190, 180, 170, 180], // Mangaluru
+            [210, 205, 215, 200, 205, 200, 210, 195, 185, 180, 185, 190, 195, 200, 205, 195, 200, 190, 185, 180, 185, 180, 185, 190, 195, 200, 185, 190, 180, 175, 185], // Belagavi
+            [195, 190, 200, 185, 195, 190, 195, 190, 180, 175, 180, 185, 190, 195, 200, 190, 195, 185, 180, 175, 180, 175, 180, 185, 190, 195, 185, 190, 180, 170, 180], // Ballari
+            [205, 200, 210, 195, 205, 200, 210, 195, 185, 180, 185, 190, 195, 200, 205, 195, 200, 190, 185, 180, 185, 180, 185, 190, 195, 200, 185, 190, 180, 175, 185], // Bidar
+            [190, 185, 200, 185, 195, 190, 195, 190, 180, 175, 180, 185, 190, 195, 200, 190, 195, 185, 180, 175, 180, 175, 180, 185, 190, 195, 185, 190, 180, 170, 180], // Gulbarga
+            [180, 175, 190, 180, 185, 180, 190, 185, 175, 170, 180, 185, 190, 195, 200, 190, 195, 185, 180, 175, 180, 175, 180, 185, 190, 195, 185, 190, 180, 170, 180], // Davanagere
+            [175, 170, 185, 175, 180, 175, 180, 175, 170, 165, 175, 180, 185, 190, 195, 185, 190, 180, 175, 170, 175, 170, 175, 180, 185, 190, 175, 180, 175, 165, 175], // Udupi
+            [185, 180, 195, 185, 190, 185, 190, 185, 180, 175, 180, 185, 190, 195, 200, 190, 195, 185, 180, 175, 180, 175, 180, 185, 190, 195, 185, 190, 180, 170, 180], // Bijapur
+            [190, 185, 200, 190, 195, 190, 195, 190, 185, 180, 185, 190, 195, 200, 205, 195, 200, 190, 185, 180, 185, 180, 185, 190, 195, 200, 185, 190, 180, 175, 185], // Chikkamagaluru
+            [195, 190, 205, 195, 200, 195, 200, 195, 190, 185, 190, 195, 200, 205, 210, 200, 205, 195, 190, 185, 190, 185, 190, 195, 200, 205, 190, 195, 185, 180, 190], // Hassan
+            [200, 195, 210, 200, 205, 200, 205, 200, 195, 190, 195, 200, 205, 210, 215, 205, 210, 200, 195, 190, 195, 190, 195, 200, 205, 210, 195, 200, 190, 185, 195], // Tumakuru
+            [210, 205, 220, 210, 215, 210, 215, 210, 205, 200, 205, 210, 215, 220, 225, 215, 220, 210, 205, 200, 205, 200, 205, 210, 215, 220, 205, 210, 200, 195, 205], // Shivamogga
+            [195, 190, 205, 195, 200, 195, 200, 195, 190, 185, 190, 195, 200, 205, 210, 200, 205, 195, 190, 185, 190, 185, 190, 195, 200, 205, 190, 195, 185, 180, 190], // Raichur
+            [200, 195, 210, 200, 205, 200, 205, 200, 195, 190, 195, 200, 205, 210, 215, 205, 210, 200, 195, 190, 195, 190, 195, 200, 205, 210, 195, 200, 190, 185, 195], // Bagalkot
+            [190, 185, 200, 190, 195, 190, 195, 190, 185, 180, 185, 190, 195, 200, 205, 195, 200, 190, 185, 180, 185, 180, 185, 190, 195, 200, 185, 190, 180, 175, 185], // Dharwad
+            [185, 180, 195, 185, 190, 185, 190, 185, 180, 175, 180, 185, 190, 195, 200, 190, 195, 185, 180, 175, 180, 175, 180, 185, 190, 195, 185, 190, 180, 170, 180], // Kolar
+            [180, 175, 190, 180, 185, 180, 190, 185, 175, 170, 180, 185, 190, 195, 200, 190, 195, 185, 180, 175, 180, 175, 180, 185, 190, 195, 185, 190, 180, 170, 180], // Dakshina Kannada
+            [185, 180, 195, 185, 190, 185, 190, 185, 180, 175, 180, 185, 190, 195, 200, 190, 195, 185, 180, 175, 180, 175, 180, 185, 190, 195, 185, 190, 180, 170, 180], // Vijayapura
+            [180, 175, 190, 180, 185, 180, 190, 185, 175, 170, 180, 185, 190, 195, 200, 190, 195, 185, 180, 175, 180, 175, 180, 185, 190, 195, 185, 190, 180, 170, 180], // Koppal
+            [185, 180, 195, 185, 190, 185, 190, 185, 180, 175, 180, 185, 190, 195, 200, 190, 195, 185, 180, 175, 180, 175, 180, 185, 190, 195, 185, 190, 180, 170, 180], // Chitradurga
+            [180, 175, 190, 180, 185, 180, 190, 185, 175, 170, 180, 185, 190, 195, 200, 190, 195, 185, 180, 175, 180, 175, 180, 185, 190, 195, 185, 190, 180, 170, 180], // Ramanagara
+            [185, 180, 195, 185, 190, 185, 190, 185, 180, 175, 180, 185, 190, 195, 200, 190, 195, 185, 180, 175, 180, 175, 180, 185, 190, 195, 185, 190, 180, 170, 180], // Yadgir
+            [190, 185, 200, 190, 195, 190, 195, 190, 185, 180, 185, 190, 195, 200, 205, 195, 200, 190, 185, 180, 185, 180, 185, 190, 195, 200, 185, 190, 180, 175, 185], // Chikkaballapura
+            [195, 190, 205, 195, 200, 195, 200, 195, 190, 185, 190, 195, 200, 205, 210, 200, 205, 195, 190, 185, 190, 185, 190, 195, 200, 205, 190, 195, 185, 180, 190], // Uttara Kannada
+            [200, 195, 210, 200, 205, 200, 205, 200, 195, 190, 195, 200, 205, 210, 215, 205, 210, 200, 195, 190, 195, 190, 195, 200, 205, 210, 195, 200, 190, 185, 195], // Chamarajanagar
+            [185, 180, 195, 185, 190, 185, 190, 185, 180, 175, 180, 185, 190, 195, 200, 190, 195, 185, 180, 175, 180, 175, 180, 185, 190, 195, 185, 190, 180, 170, 180], // Haveri
+            [190, 185, 200, 190, 195, 190, 195, 190, 185, 180, 185, 190, 195, 200, 205, 195, 200, 190, 185, 180, 185, 180, 185, 190, 195, 200, 185, 190, 180, 175, 185], // Kodagu
+        ];
+
+        // Create a dataset for each district
+        const karnatakaDatasets = [];
+        for (let i = 0; i < karnatakaDistricts.length; i++) {
+            karnatakaDatasets.push({
+                label: karnatakaDistricts[i],
+                data: karnatakaPollutionData[i],
+                fill: false,
+                borderColor: getRandomColor(),
+                tension: 0.4
+            });
+        }
+
+        // Create the chart
+        const karnatakaCtx = document.getElementById('karnatakaDistrictChart').getContext('2d');
+        const karnatakaDistrictChart = new Chart(karnatakaCtx, {
+            type: 'line',
+            data: {
+                labels: years,
+                datasets: karnatakaDatasets
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Function to generate random colors
+        function getRandomColor() {
+            const letters = '0123456789ABCDEF';
+            let color = '#';
+            for (let i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }
+    </script>
+
+{% endblock %}

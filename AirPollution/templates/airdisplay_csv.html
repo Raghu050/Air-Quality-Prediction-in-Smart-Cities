@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Air Pollution Data Visualization</title>
+</head>
+<body>
+    <h1>Air Pollution Data Visualization</h1>
+    
+    <input type="date" id="filterInput" onkeyup="filterTable()" placeholder="Filter by From Date..">
+    
+    <table border="1">
+        <thead>
+            <tr>
+                <th>From Date</th>
+                <th>To Date</th>
+                <th>PM2.5 (ug/m3)</th>
+                <th>PM10 (ug/m3)</th>
+                <th>NO (ug/m3)</th>
+                <th>NO2 (ug/m3)</th>
+                <th>NOx (ppb)</th>
+                <th>NH3 (ug/m3)</th>
+                <th>SO2 (ug/m3)</th>
+                <th>CO (mg/m3)</th>
+                <th>Ozone (ug/m3)</th>
+                <th>Benzene (ug/m3)</th>
+                <th>Toluene (ug/m3)</th>
+                <th>Temp (degree C)</th>
+                <th>RH (%)</th>
+                <th>WS (m/s)</th>
+                <th>WD (deg)</th>
+                <th>SR (W/mt2)</th>
+                <th>BP (mmHg)</th>
+                <th>VWS (m/s)</th>
+                <th>Xylene (ug/m3)</th>
+                <th>RF (mm)</th>
+                <th>AT (degree C)</th>
+            </tr>
+        </thead>
+        <tbody id="dataTable">
+            {% for row in data %}
+                <tr>
+                    {% for value in row %}
+                        <td>{{ value }}</td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <canvas id="chart"></canvas>
+    <script>
+        function filterTable() {
+            var input, filter, table, tr, td, i, txtValue;
+            input = document.getElementById("filterInput");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("dataTable");
+            tr = table.getElementsByTagName("tr");
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[0]; // First column
+                if (td) {
+                    txtValue = td.textContent || td.innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+    </script>
+
+
+    
+<script>
+    function filterTable() {
+        // Your filtering function here
+    }
+    
+    // Function to extract data from the table and plot it
+    function plotData() {
+        var table = document.getElementById("dataTable");
+        var labels = [];
+        var data = [];
+        var rows = table.rows;
+        for (var i = 1; i < rows.length; i++) {
+            var cells = rows[i].cells;
+            labels.push(cells[0].innerText); // Assuming the first column is the x-axis label
+            data.push(parseFloat(cells[1].innerText)); // Assuming the second column is the data to plot
+        }
+        
+        var ctx = document.getElementById('chart').getContext('2d');
+        var chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Data',
+                    data: data,
+                    borderColor: 'rgb(75, 192, 192)',
+                    tension: 0.1
+                }]
+            }
+        });
+    }
+    
+    // Call the plotData function when the page is loaded
+    window.onload = plotData;
+</script>
+</body>
+</html>

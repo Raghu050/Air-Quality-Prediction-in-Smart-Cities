@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}Parkinsons{% endblock %}
+
+{% block content %}
+<h2>Parkinson's Disease Prediction</h2>
+<form method="post" action="{% url 'predict_parkinsons' %}">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <input type="submit" value="Predict">
+</form>
+{% endblock %}

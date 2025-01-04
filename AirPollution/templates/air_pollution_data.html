@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% block title %}
+
+<title>Air Pollution Data</title>
+{% endblock %}
+
+{% block style %}
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .chart-row {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .chart-col {
+            flex: 0 0 33.33%;
+            margin-right: 10px;
+            border: 1px solid #ccc; /* Add border style */
+            padding: 10px; /* Add padding for spacing */
+        }
+        .chart-container {
+            height: 400px;
+            width: 100%;
+        }
+    </style>
+{% endblock %}
+
+{% block index %}
+{% endblock %}
+
+{% block content %}
+    <h1>Air Quality : AQI value </h1>
+    <div id="chartContainer"></div>
+
+    <script>
+        // Retrieve data from Django view
+        const dataJson = JSON.parse('{{ data_json|escapejs }}');
+        
+        // Group years into rows
+        const rows = [
+            [2017, 2018, 2019],
+            [2020, 2021, 2022],
+            [2023]
+        ];
+        
+        // Iterate over rows and create charts for each year
+        rows.forEach((row, rowIndex) => {
+            const rowContainer = document.createElement('div');
+            rowContainer.classList.add('chart-row');
+            document.getElementById('chartContainer').appendChild(rowContainer);
+
+            row.forEach(year => {
+                const colContainer = document.createElement('div');
+                colContainer.classList.add('chart-col');
+                rowContainer.appendChild(colContainer);
+
+                const chartCanvas = document.createElement('canvas');
+                chartCanvas.classList.add('chart-container');
+                colContainer.appendChild(chartCanvas);
+
+                new Chart(chartCanvas, {
+                    type: 'pie',
+                    data: {
+                        labels: Object.keys(dataJson[year]),
+                        datasets: [{
+                            label: `Air Pollution by District for ${year}`,
+                            data: Object.values(dataJson[year]),
+                            
+                            backgroundColor: [
+                                'rgba(255, 99, 132, 0.2)',
+                                'rgba(54, 162, 235, 0.2)',
+                                'rgba(255, 206, 86, 0.2)',
+                                'rgba(75, 192, 192, 0.2)',
+                                'rgba(153, 102, 255, 0.2)',
+                                'rgba(255, 159, 64, 0.2)'
+                            ],
+                            borderColor: [
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(153, 102, 255, 1)',
+                                'rgba(255, 159, 64, 1)'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: 'black' // Color for the legend text
+                            }
+                        }
+                    }
+                    }
+                });
+            });
+        });
+    </script>
+{% endblock %}

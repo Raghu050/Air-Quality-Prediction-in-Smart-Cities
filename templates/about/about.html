@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% load static%}
+{% block title %}About{% endblock %}
+
+{% block style %}
+<style>
+    /* Add your custom styles here */
+    /* For example, to center align text */
+    .about {
+        text-align: center;
+        padding: 50px 0;
+    }
+</style>
+{% endblock %}
+
+{% block index %}
+{% endblock %}
+
+{% block content %}
+<section class="about">
+    <div class="container">
+        <h1>About</h1>
+        <div style="text-align: justify;font-size: smaller;">
+            <h6><b>In recent years, the rapid urbanization of cities in Karnataka, India, has brought about unprecedented challenges, with air quality emerging as a critical concern. As urban populations grow, so does the impact of industrialization, vehicular emissions, and other anthropogenic activities on air quality. Recognizing the need for effective monitoring and prediction systems, this research endeavors to implement an artificial intelligence (AI)-driven solution for air quality prediction in smart cities across Karnataka.</b></h6>
+            <h6>
+
+                    <li>
+                        The significance of this study lies in its focus on leveraging AI-based classification models within the context of a smart city framework. Karnataka, with its diverse urban landscape, faces unique environmental challenges that demand tailored solutions. The proposed system utilizes a carefully curated dataset, incorporating parameters specific to the region, such as meteorological conditions, traffic density, and industrial emissions.
+                    </li>
+                    <li>
+                        The choice of a classification model enables the accurate prediction of air quality levels, facilitating timely interventions to mitigate pollution. To ensure seamless integration and accessibility, the Django framework is adopted for the development of a web-based application. This application not only provides real-time air quality information but also empowers stakeholders with intuitive visualizations and insights into historical trends.
+                    </li>
+                    <li>
+                        The underlying SQLite database ensures efficient data management and retrieval, aligning with the scalability requirements of smart city infrastructures. By combining machine learning, web development, and database management, this research endeavors to contribute a comprehensive solution to the burgeoning challenge of air quality in Karnataka's smart cities. The outcomes of this study hold the potential to inform policy decisions, empower residents, and pave the way for sustainable urban development in the face of escalating environmental concerns.
+                    </li>
+
+            </h6>
+        </div>
+        <hr>
+        <img src="{% static 'analysis/a.jpeg' %}" width="50%" >
+
+    </div>
+</section>
+{% endblock %}

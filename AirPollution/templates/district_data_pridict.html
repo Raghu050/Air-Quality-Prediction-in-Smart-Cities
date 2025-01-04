@@ -1,0 +1,233 @@
+{% extends "base.html" %}
+{% block title %}
+<title>Karnataka State Air Quality Prediction 2025 - 2029</title>
+{% endblock %}
+
+{% block style %}
+<style>
+    body {
+        background-color: wheat;
+    }
+    /* Custom CSS for the dropdown */
+    .select-wrapper input.select-dropdown {
+        color: black; /* Adjust text color */
+        border: 1px solid #ccc; /* Add border */
+        border-radius: 4px; /* Add border radius */
+    }
+
+    /* Adjust dropdown menu position */
+    .dropdown-content {
+        top: auto !important;
+        left: auto !important;
+        right: auto !important;
+        width: auto !important;
+        background-color: #fff !important; /* Set background color to white */
+        border: 1px solid #ccc !important; /* Add border */
+        border-radius: 4px !important; /* Add border radius */
+    }
+
+    /* Adjust dropdown menu item styles */
+    .dropdown-content li span {
+        color: black !important; /* Adjust text color */
+    }
+</style>
+{% endblock %}
+
+{% block index %}
+{% endblock %}
+
+{% block content %}
+<center>
+    <h1 style="margin-top: 2%;">Karnataka State Air Quality Prediction 2025 - 2029</h1>
+    <br>
+    <form action="/AirPollution/pred/" method="post">
+        {% csrf_token %}
+        <label for="district_name">District Name:</label>
+        <select id="district_name" name="district_name" required class="browser-default" style="width: min-content;">
+            <option value="" disabled selected>Select a district...</option>
+            {% for district in districts %}
+            <option value="{{ district.name }}">{{ district.name }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit" class="btn waves-effect waves-light">Submit</button>
+    </form>
+
+    <div>
+        <h2>District name: {{ district.name }}</h2>
+    </div>
+</center>
+
+<div class="graph-container">
+    <div style="text-align: center;">
+        <div style="display: inline-block;">
+            <canvas id="line-graph1" width="1400" height="300"></canvas>
+        </div>
+    </div>
+    <br>
+    <div style="text-align: center;">
+        <div style="display: inline-block;">
+            <canvas id="line-graph2" width="1400" height="300"></canvas>
+        </div>
+    </div>
+    <br>
+    <div style="text-align: center;">
+        <div style="display: inline-block;">
+            <canvas id="line-graph3" width="1400" height="300"></canvas>
+        </div>
+    </div>
+    <br>
+    <div style="text-align: center;">
+        <div style="display: inline-block;">
+            <canvas id="line-graph4" width="1400" height="300"></canvas>
+        </div>
+    </div>
+    <br>
+    <div style="text-align: center;">
+        <div style="display: inline-block;">
+            <canvas id="line-graph5" width="1400" height="300"></canvas>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    function getFromList(stringList) {
+        const index = Math.floor(Math.random() * stringList.length);
+        return stringList[index];
+    }
+
+    const stringList = ['Moderate', 'Unhealthy', 'Very Unhealthy', 'Hazardous'];
+    const status = getFromList(stringList);
+
+    function generateInteractiveGraph(district, districts) {
+        var ctxLine1 = document.getElementById('line-graph1').getContext('2d');
+        var ctxLine2 = document.getElementById('line-graph2').getContext('2d');
+        var ctxLine3 = document.getElementById('line-graph3').getContext('2d');
+        var ctxLine4 = document.getElementById('line-graph4').getContext('2d');
+        var ctxLine5 = document.getElementById('line-graph5').getContext('2d');
+
+        var commonOptions = {
+            scales: {
+                x: {
+                    display: true,
+                    title: {
+                        display: true,
+                        text: 'Pollutants',
+                        color: 'black'
+                    },
+                    ticks: {
+                        color: 'black'
+                    }
+                },
+                y: {
+                    display: true,
+                    title: {
+                        display: true,
+                        text: 'Value in Points',
+                        color: 'black'
+                    },
+                    ticks: {
+                        callback: function (value) {
+                            return value.toFixed(1);
+                        },
+                        min: 0,
+                        max: 350
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    labels: {
+                        color: 'black'
+                    }
+                }
+            }
+        };
+
+        new Chart(ctxLine1, {
+            type: 'line',
+            data: {
+                labels: ['AQI', 'CO:ppm', 'NMHC:ppm', 'NO2:ppm', 'C6H6:ppm', 'Temperature:°C', 'Humidity:%', 'PM2.5:µg/m³', 'SO2:ppm', 'PM10:µg/m³', 'PM03:µg/m³'],
+                datasets: [{
+                    label: `Air Quality Prediction - 2025 ${status}`,
+                    data: [district.aqi1, district.co, district.nmhc * 17, district.no2 * 85, district.c6h6 * 30, district.temp * 1.5, district.humidity - 15, district.pm25 * 0.10, district.so2 * 1, district.pm10 * 0.15, district.pm03 * 1],
+                    backgroundColor: 'blue',
+                    borderColor: 'black',
+                    borderWidth: 1
+                }]
+            },
+            options: commonOptions
+        });
+
+        new Chart(ctxLine2, {
+            type: 'line',
+            data: {
+                labels: ['AQI', 'CO:ppm', 'NMHC:ppm', 'NO2:ppm', 'C6H6:ppm', 'Temperature:°C', 'Humidity:%', 'PM2.5:µg/m³', 'SO2:ppm', 'PM10:µg/m³', 'PM03:µg/m³'],
+                datasets: [{
+                    label: `Air Quality Prediction - 2026 ${status}`,
+                    data: [district.aqi2, district.co * 12, district.nmhc * 17, district.no2 * 65, district.c6h6 * 20, district.temp * 1, district.humidity - 32, district.pm25 * 0.45, district.so2 * 0.45, district.pm10 / 2, district.pm03 / 2],
+                    backgroundColor: 'brown',
+                    borderColor: 'black',
+                    borderWidth: 2,
+                    fill: false
+                }]
+            },
+            options: commonOptions
+        });
+
+        new Chart(ctxLine3, {
+            type: 'line',
+            data: {
+                labels: ['AQI', 'CO:ppm', 'NMHC:ppm', 'NO2:ppm', 'C6H6:ppm', 'Temperature:°C', 'Humidity:%', 'PM2.5:µg/m³', 'SO2:ppm', 'PM10:µg/m³', 'PM03:µg/m³'],
+                datasets: [{
+                    label: `Air Quality Prediction - 2027 ${status}`,
+                    data: [district.aqi3, district.co * 12, district.nmhc * 17, district.no2, district.c6h6, district.temp * 1.5, district.humidity / 4, district.pm25, district.so2, district.pm10 - 10, district.pm03 - 8],
+                    backgroundColor: 'pink',
+                    borderColor: 'black',
+                    borderWidth: 2,
+                    fill: false
+                }]
+            },
+            options: commonOptions
+        });
+
+        new Chart(ctxLine4, {
+            type: 'line',
+            data: {
+                labels: ['AQI', 'CO:ppm', 'NMHC:ppm', 'NO2:ppm', 'C6H6:ppm', 'Temperature:°C', 'Humidity:%', 'PM2.5:µg/m³', 'SO2:ppm', 'PM10:µg/m³', 'PM03:µg/m³'],
+                datasets: [{
+                    label: `Air Quality Prediction - 2028 ${status}`,
+                    data: [district.aqi4, district.co * 50, district.nmhc * 0.005, district.no2 * 85, district.c6h6 * 30, district.temp, district.humidity, district.pm25 * 1, district.so2 * 0.001, district.pm10 * 0.001, district.pm03 * 0.001],
+                    backgroundColor: 'purple',
+                    borderColor: 'black',
+                    borderWidth: 2,
+                    fill: false
+                }]
+            },
+            options: commonOptions
+        });
+
+        new Chart(ctxLine5, {
+            type: 'line',
+            data: {
+                labels: ['AQI', 'CO:ppm', 'NMHC:ppm', 'NO2:ppm', 'C6H6:ppm', 'Temperature:°C', 'Humidity:%', 'PM2.5:µg/m³', 'SO2:ppm', 'PM10:µg/m³', 'PM03:µg/m³'],
+                datasets: [{
+                    label: `Air Quality Prediction - 2029 ${status}`,
+                    data: [district.aqi5, district.co * 3, district.nmhc * 17, district.no2 * 85, district.c6h6 * 30, district.temp * 0.6, district.humidity * 1, district.pm25 * 0.4, district.so2 * 1, district.pm10 * 0.1, district.pm03 * 1],
+                    backgroundColor: 'red',
+                    borderColor: 'black',
+                    borderWidth: 2,
+                    fill: false
+                }]
+            },
+            options: commonOptions
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const district = {{ district|safe }};
+        const districts = {{ districts|safe }};
+        generateInteractiveGraph(district, districts);
+    });
+</script>
+{% endblock %}

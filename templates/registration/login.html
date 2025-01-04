@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block title %}Login{% endblock %}
+{% block style %}
+<style>
+    /* Add your custom styles here */
+    /* For example, to customize the card background color */
+    .card {
+        background-color: #37474f; /* Dark grey */
+    }
+</style>
+{% endblock %}
+
+{% block index %}
+{% endblock %}
+
+{% block content %}
+<section class="vh-100">
+    <div class="container">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col-12 col-md-6">
+                <div class="card">
+                    <div class="card-content">
+                        <span class="card-title" style="color: rgb(5, 10, 15);">Login</span><br><br>
+                        {% if form.errors %}
+                            <div class="alert alert-danger" role="alert">
+                                <p class="text-black-50" style="color: rgb(5, 10, 15);">
+                                    Please check your username and password.
+                                </p><br>
+                            </div>
+                        {% else %}
+                            <p class="text-white-50">
+                                Please, use the following form to Login.
+                            </p><br>
+                        {% endif %}
+                        <form action="{% url 'login' %}" method="post">
+                            {% csrf_token %}
+                            <div class="input-field">
+                                {{ form.username.label_tag }}<br>
+                                {{ form.username }}
+                            </div>
+                            <div class="input-field">
+                                {{ form.password.label_tag }}<br><br>
+                                {{ form.password }}
+                            </div>
+                            <button class="btn waves-effect waves-light" type="submit">Login</button><br><br>
+                        </form>
+                        <p class="text-white-50">Don't have an account? <a href="{% url 'register' %}" class="text-black-50">Sign Up</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+{% block script %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize Materialize components
+        M.AutoInit();
+    });
+</script>
+{% endblock %}

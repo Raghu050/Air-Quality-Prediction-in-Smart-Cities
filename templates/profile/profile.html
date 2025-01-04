@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}User Profile{% endblock %}
+
+{% block style %}
+<style>
+    .text-dark {
+        color: black !important;
+    }
+</style>
+{% endblock %}
+
+
+{% block index %}
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5 text-dark">
+    <h2 style="text-align: center; font-weight: bolder;">PROFILE</h2>
+
+    <!-- Edit Profile Section -->
+    <div class="container mt-5">
+        <h2>Edit Profile</h2>
+        <form method="post" action="{% url 'edit_profile' %}" style="width: 100%;" class="text-dark">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="id_username" class="text-dark">Username:</label>
+                <input type="text" name="username" value="{{ user.username }}" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="id_first_name">First Name:</label>
+                <input type="text" name="first_name" value="{{ user.first_name }}" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="id_last_name">Last Name:</label>
+                <input type="text" name="last_name" value="{{ user.last_name }}" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="id_email">Email:</label>
+                <input type="email" name="email" value="{{ user.email }}" class="form-control">
+            </div>
+            <button type="submit" class="btn btn-primary">Save Changes</button>
+            <a href="{% url 'profile' %}" class="btn btn-secondary">Cancel</a>
+        </form>
+    </div>
+
+    <!-- Change Password Section -->
+    <div class="container mt-5">
+        <p>You can change your password <a href="{% url 'password_change' %}">here</a>.</p>
+    </div>
+
+    <hr>
+
+    <!-- Delete Account Section -->
+    <div class="container mt-5">
+        <h2>Delete Account</h2>
+        <p>Are you sure you want to delete your account? This action cannot be undone.</p>
+        <form method="post" action="{% url 'delete_account' %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger" style="background-color: red;">Delete</button>
+            <a href="{% url 'profile' %}" class="btn btn-secondary">Cancel</a>
+        </form>
+    </div>
+    <br>
+</div>
+{% endblock %}

@@ -1,0 +1,22 @@
+<ul class="sidenav" id="mobile-demo">
+    {% if request.user.is_authenticated %}
+    <li><a href="{% url 'about' %}">About</a></li>
+    <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
+    <li><a href="{% url 'profile' %}">Profile</a></li>
+    <li><a href="http://localhost:8000/AirPollution/display_district_data/">Analytics</a></li>
+    <li><a href="http://localhost:8000/AirPollution/display_air_pollution_data/">Karnataka</a></li>
+    <li><a href="http://localhost:8000/AirPollution/pred/">Prediction</a></li>
+    <li><a href="http://localhost:8000/AirPollution/overallval/">India</a></li>
+    <li><a href="{% url 'contact' %}">Contact</a></li>
+    <li>
+        <form method="post" action="{% url 'logout' %}" class="my-2 my-sm-0">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-outline-success">Logout</button>
+        </form>
+    </li>
+    {% else %}
+    <li><a href="{% url 'about' %}">About</a></li>
+    <li><a href="{% url 'login' %}">Login</a></li>
+    <li><a href="{% url 'register' %}">Register</a></li>
+    {% endif %}
+</ul>

@@ -1,0 +1,82 @@
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Collapsible Sidebar</title>
+    <!-- Meta tags, CSS links, etc. -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
+    <style>
+        /* Your existing CSS styles */
+        .sidenav-trigger {
+            display: block;
+        }
+        @media (min-width: 993px) {
+            .sidenav {
+                transform: translateX(-100%);
+                position: fixed;
+                width: 250px;
+                left: 0;
+                top: 0;
+                height: 100%;
+                z-index: 1;
+                transition: transform 0.3s ease-in-out;
+            }
+            .sidenav.active {
+                transform: translateX(0);
+            }
+            main {
+                margin-left: 250px;
+            }
+        }
+        @media (max-width: 992px) {
+            main {
+                margin-left: 0;
+            }
+        }
+    </style>
+
+    <!-- Your existing trigger button -->
+    <a id="sidenav-toggle" class="sidenav-trigger" style="color: antiquewhite;"><i class="material-icons" style="margin-top: 1px;margin-left: 1%;">menu</i></a>
+
+    <!-- Your existing sidebar markup -->
+    <ul class="sidenav" id="mobile-demo">
+        {% if request.user.is_authenticated %}
+        <li><a href="/">Home</a></li>
+        <li><a href="{% url 'about' %}">About</a></li>
+        <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
+        <li><a href="{% url 'profile' %}">Profile</a></li>
+        <li><a href="http://localhost:8000/AirPollution/display_district_data/">Analytics</a></li>
+        <li><a href="http://localhost:8000/AirPollution/display_air_pollution_data/">Karnataka</a></li>
+        <li><a href="http://localhost:8000/AirPollution/pred/">Prediction</a></li>
+        <li><a href="http://localhost:8000/AirPollution/overallval/">India</a></li>
+        <li><a href="{% url 'contact' %}">Contact</a></li>
+        <li>
+            <form method="post" action="{% url 'logout' %}" class="my-2 my-sm-0">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-outline-success">Logout</button>
+            </form>
+        </li>
+        {% else %}
+        <br>
+        <li><a href="/">Home</a></li>
+        <li><a href="{% url 'about' %}">About</a></li>
+        <li><a href="{% url 'login' %}">Login</a></li>
+        <li><a href="{% url 'register' %}">Register</a></li>
+        {% endif %}
+    </ul>
+
+    <!-- JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var elems = document.querySelectorAll('.sidenav');
+            var instances = M.Sidenav.init(elems, {});
+
+            // Add event listener to the trigger button to toggle the sidebar
+            document.getElementById('sidenav-toggle').addEventListener('click', function() {
+                var sidenav = document.querySelector('.sidenav');
+                sidenav.classList.toggle('active');
+            });
+        });
+    </script>
+

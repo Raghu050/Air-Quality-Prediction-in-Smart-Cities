@@ -1,0 +1,81 @@
+{% load static %}
+<style>
+
+    #text-container {
+        color: #ffffff;
+        font-family: 'Arial', sans-serif;
+        font-size: 24px;
+        position: absolute;
+        transform: translateY(-50%);
+        height: 110%;
+        justify-content: flex-end; 
+        align-items: center;
+        background-color: #e0e1e6;
+        background-image: url(https://i.pcmag.com/imagery/articles/00AnZ0oWXM4hvEqLWxsAdbo-9..v1683491243.jpg);
+        background-attachment: fixed;
+        background-repeat: no-repeat;
+        background-size: cover;
+        z-index:-5;
+        width: 100%;
+        margin-top: 20%;
+    }
+
+    .horizontal-div {
+        position: absolute;
+        top: 105%; /* Adjust as needed */
+        left: 35%; /* Adjust as needed */
+        transform: translate(-50%, -50%);
+        display: flex;
+        justify-content: space-around;
+        margin-top: 20px;
+    }
+
+    .horizontal-div > div {
+        width: calc(35% - 20px); /* Adjust width and margin as needed */
+        background-color: rgba(255, 255, 255, 0.8);
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        color: #333;
+        margin-left:5% ;
+    }
+</style>
+
+<div id="text-container" >
+    <h1 style=" font-family: system-ui, -apple-system, BlinkMacSystemFont,'Open Sans'; font-size: 45px;margin-top: 100px;margin-left: 8px; font-weight: bold; font-style: italic; color: #d0d024;">
+        AIR QUALITY PREDICTION
+    </h1> 
+    <p style="font-size:27px;animation: fadeInUp 1.5s ease-out;margin-top: 1px;text-shadow: 3px 3px 3px rgba(239, 235, 231, 0.8);color: #ec074f;">
+        <!-- Air quality monitoring is an important tool for improving air quality, protecting public health, and ensuring compliance with regulations. It can also be used to identify pollution sources, monitor climate change, or support research and development. -->
+        <h1 style="margin-top: 45%;color: #333;margin-left: 37%;">PROJECT TEAM</h1>
+    </p>
+</div>
+
+<!-- Keep this part below the text container -->
+<div class="horizontal-div" style="margin-top: 18%;" >
+    <div style="margin-left: 13%;">
+        <!-- Content for the first horizontal div -->
+        <img src="{%static 'projectgroup\SHIVANANDLAMANI.jpg' %}" alt="" width="240px" height="280px">
+        <h5>SHIVANAND LAMANI</h5>
+        <p>2AG20CS066</p>
+    </div>
+    <div>
+        <!-- Content for the second horizontal div -->
+        <img src="{%static 'projectgroup\RAGHAVENDRAKUSOOR.jpg' %}" alt="" width="240px" height="280px">
+        <h5>RAGHAVENDRA KUSOOR</h5>
+        <p>2AG20CS050</p>
+    </div>
+    <div>
+        <!-- Content for the third horizontal div -->
+        <img src="{%static 'projectgroup\SUHASPAWAR.jpg' %}" alt="" width="240px" height="280px">
+        <h5>SUHAS PAWAR</h5>
+        <p>2AG20CS075</p>
+    </div>
+    <div>
+        <!-- Content for the fourth horizontal div -->
+        <img src="{%static 'projectgroup\VIVEKBORGALLE.jpg' %}" alt="" width="240px" height="280px">
+        <h5>VIVEK BORGALLE</h5>
+        <p>2AG20CS093</p>
+    </div>
+</div>

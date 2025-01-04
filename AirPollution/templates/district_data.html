@@ -1,0 +1,258 @@
+{% extends "base.html" %}
+{% block title %}
+{% endblock %}
+
+{% block style %}
+    <style>
+        body {
+            background-color: wheat;
+        }
+        /* Custom CSS for the dropdown */
+        .select-wrapper input.select-dropdown {
+            color: black; /* Adjust text color */
+            border: 1px solid #ccc; /* Add border */
+            border-radius: 4px; /* Add border radius */
+        }
+
+        /* Adjust dropdown menu position */
+        .dropdown-content {
+            top: auto !important;
+            left: auto !important;
+            right: auto !important;
+            width: auto !important;
+            background-color: #fff !important; /* Set background color to white */
+            border: 1px solid #ccc !important; /* Add border */
+            border-radius: 4px !important; /* Add border radius */
+        }
+
+        /* Adjust dropdown menu item styles */
+        .dropdown-content li span {
+            color: black !important; /* Adjust text color */
+        }
+    </style>
+{% endblock %}
+
+{% block index %}
+{% endblock %}
+
+{% block content %}
+
+    <center>
+        <h1 style="margin-top: 2%;">Karnataka State Analytics Report</h1>
+        <br>
+        <form action="/AirPollution/display_district_data/" method="post">
+            {% csrf_token %}
+            <label for="district_name">District Name:</label>
+            <select id="district_name" name="district_name" required class="browser-default" style="width: min-content;">
+                <option value="" disabled selected>Select a district...</option>
+                {% for district in districts %}
+                <option value="{{ district.name }}">{{ district.name }}</option>
+                {% endfor %}
+            </select>
+            <button type="submit" class="btn waves-effect waves-light">Submit</button>
+
+        </form>
+
+        <div>
+            <h2>Selected District Data</h2>
+            <p>District name:{{ district.name }}</p>
+            <p>year: {{year}}</p>
+            <p>AQI: {{ district.aqi }}</p>
+            <p>CO: {{ district.co }} ppm</p>
+            <p>NMHC: {{ district.nmhc }} ppm</p>
+            <p>NO2: {{ district.no2 }} ppm</p>
+            <p>C6H6: {{ district.c6h6 }} ppm</p>
+            <p>Temperature: {{ district.temp }}°C</p>
+            <p>Humidity: {{ district.humidity }}%</p>
+            <p>PM2.5: {{ district.pm25 }}µg/m³</p>
+            <p>SO2: {{ district.so2 }} ppm</p>
+            <p>PM10: {{ district.pm10 }}µg/m³</p>
+            <p>PM03: {{ district.pm03 }}µg/m³</p>
+        </div>
+    </center>
+
+    <div class="graph-container">
+        <div style="display: flex; justify-content: space-between;">
+            <div style="margin-left: 3%;">
+                <canvas id="line-graph" width="750" height="600"></canvas>
+            </div>
+            <div style="padding-right: 40%;padding-right: 40%;">
+                <canvas id="pie-graph" width="550" height="450"></canvas>
+            </div>
+        </div>
+        <br>
+    </div>
+
+    <div>
+        <canvas id="aqi-graph" width="400" height="100"></canvas>
+    </div>
+
+    <script>
+        console.log(district.aqi)
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        
+        // Call the JavaScript function to generate the interactive graph
+        generateInteractiveGraph({{ district | safe }}, {{ districts | safe }});
+
+        function generateInteractiveGraph(district, districts) {
+            var ctxLine = document.getElementById('line-graph').getContext('2d');
+            var ctxPie = document.getElementById('pie-graph').getContext('2d');
+
+            // Generate Line Graph
+            var lineChart = new Chart(ctxLine, {
+                type: 'line',
+                data: {
+                    labels: ['CO:ppm', 'NMHC:ppm', 'NO2:ppm', 'C6H6:ppm','PM2.5:µg/m³', 'SO2:ppm', 'PM10:µg/m³', 'PM03:µg/m³'],
+                    datasets: [{
+                        label: 'Air Pollution Values',
+                        data: [district.co, district.nmhc, district.no2, district.c6h6,district.pm25, district.so2, district.pm10, district.pm03],
+                        borderColor: 'rgba(255, 99, 132, 1)',            
+                        borderWidth: 2,
+                        fill: false
+                    }]
+                },
+                options: {
+                    scales: {
+                        x: {
+                            display: true,
+                            title: {
+                                display: true,
+                                text: 'Pollutants', // X axis label string
+                                color: 'black' // X axis label color
+                            },
+                            ticks: {
+                                color: 'black' // X axis tick color
+                            }
+                        },
+                        y: {
+                            display: true,
+                            title: {
+                                display: true,
+                                text: 'Values', // Y axis label string
+                                color: 'black' // Y axis label color
+                            },
+                            ticks: {
+                                color: 'black' // Y axis tick color
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: 'black' // Color for the legend text
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Generate Pie Chart for Temperature and Humidity
+            var pieChart = new Chart(ctxPie, {
+                type: 'pie',
+                data: {
+                    labels: ['Temperature:°C', 'Humidity:%'],
+                    datasets: [{
+                        label: 'Temperature and Humidity',
+                        data: [district.temp, district.humidity],
+                        backgroundColor: [
+                            'rgba(255, 206, 86, 0.2)',
+                            'rgba(75, 192, 192, 0.2)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        x: {
+                            display: true,
+                            title: {
+                                display: true,
+                                text: 'Pollutants', // X axis label string
+                                color: 'black' // X axis label color
+                            },
+                            ticks: {
+                                color: 'black' // X axis tick color
+                            }
+                        },
+                        y: {
+                            display: true,
+                            title: {
+                                display: true,
+                                text: 'Values', // Y axis label string
+                                color: 'black' // Y axis label color
+                            },
+                            ticks: {
+                                color: 'black' // Y axis tick color
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: 'black' // Color for the legend text
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Generate AQI Bar Graph
+            var aqiChart = new Chart(document.getElementById('aqi-graph').getContext('2d'), {
+    type: 'bar',
+    data: {
+        labels: districts.map(district => district.name),
+        datasets: [{
+            label: 'AQI Values | 0 - 50: Good (Green) | 51 - 100: Moderate (Yellow) | 101 - 150: Unhealthy for sensitive groups (Orange) | 151 - 200: Unhealthy (Red) | 201 - 300: Very Unhealthy (Purple) | 301 - 500: Hazardous (Maroon)',
+            data: [75,85,75,145,92,60,103,73,40,39,65,78,53,51,139,75,85,75,45,92,60,113,73,40,39,65,78,45,51,137], // Example data value
+            borderColor: 'rgba(54, 162, 235, 1)',
+            backgroundColor: ['yellow','yellow','yellow','orange','yellow','yellow','orange','yellow','green','green','yellow','yellow','yellow','yellow','orange','yellow','yellow','yellow','green','yellow','yellow','orange','yellow','green','green','yellow','yellow','green','yellow','orange'], // Example color based on AQI value
+            borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+            x: {
+                display: true,
+                title: {
+                    display: true,
+                    text: 'Pollutants', // X axis label string
+                    color: 'black' // X axis label color
+                },
+                ticks: {
+                    color: 'black' // X axis tick color
+                }
+            },
+            y: {
+                display: true,
+                beginAtZero: true,
+                title: {
+                    display: true,
+                    text: 'Values', // Y axis label string
+                    color: 'black' // Y axis label color
+                },
+                ticks: {
+                    color: 'black' // Y axis tick color
+                }
+            }
+        },
+        plugins: {
+            legend: {
+                labels: {
+                    color: 'black' // Color for the legend text
+                }
+            }
+        }
+    }
+});
+
+        }
+    </script>
+
+{% endblock %}
+

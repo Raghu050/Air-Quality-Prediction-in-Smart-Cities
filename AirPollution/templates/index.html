@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ district_data.name }} Data</title>
+    <!-- Include Plotly.js library -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+    <h1>{{ district_data.name }} Data</h1>
+    <p>CO: {{ district_data.co }}</p>
+    <p>NMHC: {{ district_data.nmhc }}</p>
+    <p>C6H6: {{ district_data.c6h6 }}</p>
+    <p>NO2: {{ district_data.no2 }}</p>
+    <p>Temperature: {{ district_data.temp }}</p>
+    <p>Humidity: {{ district_data.humidity }}</p>
+
+    <!-- Placeholder div for the Plotly.js graph -->
+    <div id="graph"></div>
+
+    <script>
+        // JavaScript code to create and display the 3D graph using Plotly.js
+        var data = [{
+            x: ['CO', 'NMHC', 'C6H6', 'NO2'],
+            y: [{{ district_data.co }}, {{ district_data.nmhc }}, {{ district_data.c6h6 }}, {{ district_data.no2 }}],
+            z: [{{ district_data.temp }}, {{ district_data.humidity }}, 0, 0],
+            type: 'scatter3d',
+            mode: 'markers',
+            marker: {
+                size: 10
+            }
+        }];
+
+        var layout = {
+            title: 'Air Quality Parameters and Weather Data',
+            scene: {
+                xaxis: { title: 'Pollutants' },
+                yaxis: { title: 'Values' },
+                zaxis: { title: 'Temperature/Humidity' }
+            }
+        };
+
+        Plotly.newPlot('graph', data, layout);
+    </script>
+</body>
+</html>

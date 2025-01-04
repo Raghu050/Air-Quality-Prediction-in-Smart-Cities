@@ -1,0 +1,392 @@
+{% extends "base.html" %}
+{% block title %}
+{% endblock %}
+
+{% block style %}
+    <style>
+        body {
+            background-color: wheat;
+        }
+        /* Custom CSS for the dropdown */
+        .select-wrapper input.select-dropdown {
+            color: black; /* Adjust text color */
+            border: 1px solid #ccc; /* Add border */
+            border-radius: 4px; /* Add border radius */
+        }
+
+        /* Adjust dropdown menu position */
+        .dropdown-content {
+            top: auto !important;
+            left: auto !important;
+            right: auto !important;
+            width: auto !important;
+            background-color: #fff !important; /* Set background color to white */
+            border: 1px solid #ccc !important; /* Add border */
+            border-radius: 4px !important; /* Add border radius */
+        }
+
+        /* Adjust dropdown menu item styles */
+        .dropdown-content li span {
+            color: black !important; /* Adjust text color */
+        }
+    </style>
+{% endblock %}
+
+{% block index %}
+{% endblock %}
+
+{% block content %}
+
+    <center>
+    <h1 style="margin-top: 2%;">Karnataka State Air Quality Prediction 2025 - 2029</h1>
+<br>
+    <form action="/AirPollution/pred/" method="post">
+        {% csrf_token %}
+        <label for="district_name">District Name:</label>
+        <select id="district_name" name="district_name" required class="browser-default" style="width: min-content;">
+            <option value="" disabled selected>Select a district...</option>
+            {% for district in districts %}
+            <option value="{{ district.name }}">{{ district.name }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit" class="btn waves-effect waves-light">Submit</button>
+
+    </form>
+
+    <div>
+        <h2>District name:{{ district.name }}</h2>
+    </div>
+    </center>
+    <div class="graph-container">
+        <div style="text-align: center;">
+            <div style="display: inline-block;">
+                <canvas id="line-graph1" width="1400" height="300"></canvas>
+                <p id="graph1-text"></p> <!-- Corrected id -->
+            </div>
+        </div>
+        <br>
+        <div style="text-align: center;">
+            <div style="display: inline-block;">
+                <canvas id="line-graph2" width="1400" height="300"></canvas>
+                <p id="graph2-text"></p> <!-- Corrected id -->
+            </div>
+        </div>
+        <br>
+        <div style="text-align: center;">
+            <div style="display: inline-block;">
+                <canvas id="line-graph3" width="1400" height="300"></canvas>
+                <p id="graph3-text"></p> <!-- Corrected id -->
+            </div>
+        </div>
+        <br>
+        <div style="text-align: center;">
+            <div style="display: inline-block;">
+                <canvas id="line-graph4" width="1400" height="300"></canvas>
+                <p id="graph4-text"></p> <!-- Corrected id -->
+            </div>
+        </div>
+        <br>
+        <div style="text-align: center;">
+            <div style="display: inline-block;">
+                <canvas id="line-graph5" width="1400" height="300"></canvas>
+                <p id="graph5-text"></p> <!-- Corrected id -->
+            </div>
+        </div>
+        
+        <br>
+        <div style="text-align: center;">
+            <div style="display: inline-block;">
+                <canvas id="line-graph5" width="1400" height="300"></canvas>
+                <p id="graph5-text"></p>
+            </div>
+        </div>
+    </div>
+
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">. -->
+    <script>
+        function generateInteractiveGraph(district, districts) {
+            var ctxLine1 = document.getElementById('line-graph1').getContext('2d');
+            var ctxLine2 = document.getElementById('line-graph2').getContext('2d');
+            var ctxLine3 = document.getElementById('line-graph3').getContext('2d');
+            var ctxLine4 = document.getElementById('line-graph4').getContext('2d');
+            var ctxLine5 = document.getElementById('line-graph5').getContext('2d');
+            
+            // Generate Bar Graph
+            var barChart = new Chart(ctxLine1, {
+                type: 'line',
+                data: {
+                    labels: ['AQI','CO:ppm','NMHC:ppm','NO2:ppm','C6H6:ppm','Temperature:°C','Humidity:%', 'PM2.5:µg/m³','SO2:ppm','PM10:µg/m³','PM03:µg/m³'],
+                    datasets: [{
+                        label: 'Air Quality  Prediction - 2025',
+                        data: [district.aqi1 ,district.co,district.nmhc* 17, district.no2* 85, district.c6h6* 30, district.temp* 1.5, district.humidity - 15, district.pm25 *0.10, district.so2* 1, district.pm10 *0.15, district.pm03 *1],
+                        
+                        backgroundColor: 'blue',
+                        borderColor: 'black',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        x: {
+                            display: true,
+                            title: {
+                                display: true,
+                                text: 'Pollutants', // X axis label string
+                                color: 'black' // X axis label color
+                            },
+                            ticks: {
+                                color: 'black' // X axis tick color
+                            }
+                        },
+                        y: {
+                            display: true,
+                            title: {
+                                display: true,
+                                text: 'Value in Points', // Y axis label string
+                                color: 'black' // Y axis label color
+                            },
+                            ticks: {
+                                callback: function(value, index, values) {
+                                    return value.toFixed(1); // Rounds to 2 decimal places
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: 'black' // Color for the legend text
+                            }
+                        }
+                    }
+                },
+                options: {
+                    scales: {
+                        x: {
+                            display: true,
+                            title: {
+                                display: true,
+                                text: 'Pollutants', // X axis label string
+                                color: 'black' // X axis label color
+                            },
+                            ticks: {
+                                color: 'black' // X axis tick color
+                            }
+                        },
+                        y: {
+                            display: true,
+                            title: {
+                                display: true,
+                                text: 'Value in Points', // Y axis label string
+                                color: 'black' // Y axis label color
+                            },
+                            ticks: {
+                                callback: function(value, index, values) {
+                                    return value.toFixed(1); // Rounds to 2 decimal places
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: 'black' // Color for the legend text
+                            }
+                        }
+                    }
+                }
+            });
+    
+            // Generate Line Graph 1
+            var lineChart1 = new Chart(ctxLine2, {
+                type: 'line',
+                data: {
+                    labels: ['AQI','CO:ppm','NMHC:ppm','NO2:ppm','C6H6:ppm','Temperature:°C','Humidity:%', 'PM2.5:µg/m³','SO2:ppm','PM10:µg/m³','PM03:µg/m³'],
+                    datasets: [{
+                        label: ' Air Quality  Prediction - 2026',
+                        data: [district.aqi2 ,district.co*12, district.nmhc*17, district.no2*65, district.c6h6*20, district.temp * 1, district.humidity- 32, district.pm25 * .45, district.so2* 0.45, district.pm10 /2, district.pm03 /2],
+                        backgroundColor: 'brown',
+                        borderColor: 'black',
+                        borderWidth: 2,
+                        fill: false
+                    }]
+                },
+                options: {
+                    scales: {
+                        x: {
+                            display: true,
+                            title: {
+                                display: true,
+                                text: 'Pollutants', // X axis label string
+                                color: 'black' // X axis label color
+                            },
+                            ticks: {
+                                color: 'black' // X axis tick color
+                            }
+                        },
+                        y: {
+                            display: true,
+                            title: {
+                                display: true,
+                                text: 'Value in Points', // Y axis label string
+                                color: 'black' // Y axis label color
+                            },
+                            ticks: {
+                                callback: function(value, index, values) {
+                                    return value.toFixed(1); // Rounds to 2 decimal places
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: 'black' // Color for the legend text
+                            }
+                        }
+                    }
+                }
+            });
+    
+            // Generate Line Graph 2
+            var lineChart2 = new Chart(ctxLine3, {
+                type: 'line',
+                data: {
+                    labels: ['AQI','CO:ppm','NMHC:ppm','NO2:ppm','C6H6:ppm','Temperature:°C','Humidity:%', 'PM2.5:µg/m³','SO2:ppm','PM10:µg/m³','PM03:µg/m³'],
+                    datasets: [{
+                        label: 'Air Quality  Prediction - 2027',
+                        data: [district.aqi3 ,district.co*12, district.nmhc*17, district.no2, district.c6h6, district.temp* 1.5, district.humidity / 4, district.pm25 , district.so2, district.pm10 -10 , district.pm03  -8],
+                        backgroundColor: 'pink',
+                        borderColor: 'black',
+                        borderWidth: 2,
+                        fill: false
+                    }]
+                },
+                options: {
+                    scales: {
+                        x: {
+                            display: true,
+                            title: {
+                                display: true,
+                                text: 'Pollutants', // X axis label string
+                                color: 'black' // X axis label color
+                            },
+                            ticks: {
+                                color: 'black' // X axis tick color
+                            }
+                        },
+                        y: {
+                            display: true,
+                            title: {
+                                display: true,
+                                text: 'Value in Points', // Y axis label string
+                                color: 'black' // Y axis label color
+                            },
+                            ticks: {
+                                callback: function(value, index, values) {
+                                    return value.toFixed(1); // Rounds to 2 decimal places
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: 'black' // Color for the legend text
+                            }
+                        }
+                    }
+                }
+            });
+    
+            // Generate Line Graph 3
+            var lineChart3 = new Chart(ctxLine4, {
+                type: 'line',
+                data: {
+                    labels: ['AQI','CO:ppm','NMHC:ppm','NO2:ppm','C6H6:ppm','Temperature:°C','Humidity:%', 'PM2.5:µg/m³','SO2:ppm','PM10:µg/m³','PM03:µg/m³'],
+                    datasets: [{
+                        label: 'Air Quality  Prediction - 2028',
+                        data: [district.aqi4,district.co* 50, district.nmhc* 0.005,  district.no2* 85, district.c6h6* 30, district.temp, district.humidity, district.pm25 *1, district.so2* 0.001, district.pm10 *0.001, district.pm03 *0.001],
+                        backgroundColor: 'purple',
+                        borderColor: 'black',
+                        borderWidth: 2,
+                        fill: false
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+    
+            // Generate Line Graph 4
+            var lineChart4 = new Chart(ctxLine5, {
+                type: 'line',
+                data: {
+                    labels: ['AQI','CO:ppm','NMHC:ppm','NO2:ppm','C6H6:ppm','Temperature:°C','Humidity:%', 'PM2.5:µg/m³','SO2:ppm','PM10:µg/m³','PM03:µg/m³'],
+                    datasets: [{
+                        label: 'Air Quality  Prediction - 2029',
+                        data: [district.aqi5, district.co* 15, district.nmhc* 17, district.no2* 85, district.c6h6* 30, district.temp* 1.5, district.humidity / 4, district.pm25 *1, district.so2* 0.001, district.pm10 *0.1, district.pm03 *0.001],
+                        backgroundColor: 'yellow',
+                        borderColor: 'black',
+                        borderWidth: 2,
+                        fill: false
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+
+            // Add text indicating air quality status and suggest precautions
+            function addTextAndPrecautions(graphId, district) {
+    var textElement = document.getElementById(graphId + '-text'); // Corrected id
+    var status;
+    var precautions;
+
+    if (district.aqi1 <= 60 || district.aqi2 <= 60 || district.aqi3 <= 60 || district.aqi4 <= 60 || district.aqi5 <= 60 ) {
+        status = 'Good';
+        precautions = 'Air quality is good. Enjoy outdoor activities.';
+    } else if (district.aqi1 <= 100 && district.aqi1 > 50 || district.aqi2 <= 100 && district.aqi2 > 50 || district.aqi3 <= 100 && district.aqi3 > 50 || district.aqi4 <= 100 && district.aqi4 > 50 || district.aqi5 <= 100 && district.aqi5 > 50) {
+        status = 'Moderate';
+        precautions = 'Air quality is moderate. Limit outdoor activities if you are sensitive to air pollution.';
+    } else if (district.aqi1 <= 150 && district.aqi1 > 100 || district.aqi2 <= 150 && district.aqi2 > 100 || district.aqi3 <= 150 && district.aqi3 > 100 || district.aqi4 <= 150 && district.aqi4 > 100 || district.aqi5 <= 150 && district.aqi5 > 100) {
+        status = 'Unhealthy for Sensitive Groups';
+        precautions = 'Air quality is unhealthy for sensitive groups. Reduce prolonged or heavy outdoor exertion.';
+    } else if (district.aqi1 <= 200 && district.aqi1 > 150 || district.aqi2 <= 200 && district.aqi2 > 150 || district.aqi3 <= 200 && district.aqi3 > 150 || district.aqi4 <= 200 && district.aqi4 > 150 || district.aqi5 <= 200 && district.aqi1 > 150) {
+        status = 'Unhealthy';
+        precautions = 'Air quality is unhealthy. Avoid prolonged or heavy outdoor exertion, especially if you are sensitive to air pollution.';
+    } else if (district.aqi1 <= 300 && district.aqi1 > 250 || district.aqi2 <= 300 && district.aqi2 > 250 || district.aqi3 <= 300 && district.aqi3 > 250 || district.aqi4 <= 300 && district.aqi4 > 250 || district.aqi5 <= 300 && district.aqi1 > 250) {
+        status = 'Very Unhealthy';
+        precautions = 'Air quality is very unhealthy. Avoid outdoor activities and stay indoors, especially if you have respiratory issues.';
+    } else {
+        status = 'Hazardous';
+        precautions = 'Air quality is hazardous. Stay indoors, avoid all outdoor activities, and keep windows and doors closed.';
+    }
+
+    textElement.innerHTML = 'Air Quality Status: ' + status + '<br>' + precautions;
+}
+
+            addTextAndPrecautions('graph1', district);
+            addTextAndPrecautions('graph2', district);
+            addTextAndPrecautions('graph3', district);
+            addTextAndPrecautions('graph4', district);
+            addTextAndPrecautions('graph5', district);
+        }
+    </script>
+    
+    <script>
+        // Call the JavaScript function to generate the interactive graph
+        generateInteractiveGraph({{ district | safe }}, {{ districts | safe }});
+    </script>
+
+{% endblock %}

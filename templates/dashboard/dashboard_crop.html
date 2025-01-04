@@ -1,0 +1,386 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block style %}
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+        }
+
+        #map {
+            height: 800px; /* Adjust height as needed */
+        }
+    </style>
+{% endblock %}
+{% load static %}
+{% block index %}
+{% endblock %}
+
+{% block content %}
+<div id="map"></div>
+{% endblock %}
+
+{% block footer %}
+{% endblock %}
+
+{% block script %}
+
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script>
+// Sample data for demonstration
+const cities = [
+  {
+    name: "Delhi",
+    state: "Delhi",
+    weather: "severe",
+    latlng: [28.6139, 77.2090],
+    airQuality: {
+      PM25: 90,
+      PM10: 115,
+      NO: 28,
+      NO2: 38,
+      NOx: 48,
+      NH3: 18,
+      SO2: 23,
+      CO: 1.8,
+      Ozone: 52,
+      Benzene: 7,
+      Toluene: 10,
+      Temp: 33,
+      RH: 68,
+      WS: 2.3,
+      WD: 195,
+      SR: 575,
+      BP: 755,
+      VWS: 1.15,
+      Xylene: 5,
+      RF: 0,
+      AT: 37.5,
+      fromDate: "2024-04-01",
+      toDate: "2024-04-30"
+    }
+  },
+  {
+    name: "Mumbai",
+    state: "Maharashtra",
+    weather: "moderate",
+    latlng: [19.0760, 72.8777],
+    airQuality: {
+      PM25: 60,
+      PM10: 110,
+      NO: 25,
+      NO2: 35,
+      NOx: 45,
+      NH3: 15,
+      SO2: 20,
+      CO: 1.7,
+      Ozone: 50,
+      Benzene: 6,
+      Toluene: 9,
+      Temp: 32,
+      RH: 65,
+      WS: 2.2,
+      WD: 190,
+      SR: 550,
+      BP: 755,
+      VWS: 1.1,
+      Xylene: 4,
+      RF: 0,
+      AT: 36,
+      fromDate: "2024-04-01",
+      toDate: "2024-04-30"
+    }
+  },
+  {
+    name: "Chennai",
+    state: "Tamil Nadu",
+    weather: "bad",
+    latlng: [13.0827, 80.2707],
+    airQuality: {
+      PM25: 70,
+      PM10: 120,
+      NO: 30,
+      NO2: 40,
+      NOx: 50,
+      NH3: 20,
+      SO2: 25,
+      CO: 1.9,
+      Ozone: 55,
+      Benzene: 7,
+      Toluene: 10,
+      Temp: 34,
+      RH: 70,
+      WS: 2.5,
+      WD: 200,
+      SR: 600,
+      BP: 750,
+      VWS: 1.2,
+      Xylene: 5,
+      RF: 0,
+      AT: 37,
+      fromDate: "2024-04-01",
+      toDate: "2024-04-30"
+    }
+  },
+  {
+    name: "Kolkata",
+    state: "West Bengal",
+    weather: "severe",
+    latlng: [22.5726, 88.3639],
+    airQuality: {
+      PM25: 80,
+      PM10: 130,
+      NO: 35,
+      NO2: 45,
+      NOx: 55,
+      NH3: 25,
+      SO2: 30,
+      CO: 2.1,
+      Ozone: 60,
+      Benzene: 8,
+      Toluene: 11,
+      Temp: 36,
+      RH: 75,
+      WS: 2.8,
+      WD: 210,
+      SR: 650,
+      BP: 745,
+      VWS: 1.3,
+      Xylene: 6,
+      RF: 0,
+      AT: 38,
+      fromDate: "2024-04-01",
+      toDate: "2024-04-30"
+    }
+  },
+  {
+    name: "Bangalore",
+    state: "Karnataka",
+    weather: "moderate",
+    latlng: [12.9716, 77.5946],
+    airQuality: {
+      PM25: 55,
+      PM10: 105,
+      NO: 22,
+      NO2: 32,
+      NOx: 42,
+      NH3: 12,
+      SO2: 17,
+      CO: 1.6,
+      Ozone: 47,
+      Benzene: 6,
+      Toluene: 9,
+      Temp: 31,
+      RH: 62,
+      WS: 2.1,
+      WD: 185,
+      SR: 525,
+      BP: 758,
+      VWS: 1.05,
+      Xylene: 4.5,
+      RF: 0,
+      AT: 36.5,
+      fromDate: "2024-04-01",
+      toDate: "2024-04-30"
+    }
+  },
+  {
+    name: "Hyderabad",
+    state: "Telangana",
+    weather: "good",
+    latlng: [17.3850, 78.4867],
+    airQuality: {
+      PM25: 45,
+      PM10: 95,
+      NO: 18,
+      NO2: 28,
+      NOx: 38,
+      NH3: 8,
+      SO2: 13,
+      CO: 1.4,
+      Ozone: 42,
+      Benzene: 4,
+      Toluene: 7,
+      Temp: 29,
+      RH: 58,
+      WS: 1.9,
+      WD: 175,
+      SR: 475,
+      BP: 765,
+      VWS: 0.95,
+      Xylene: 3.5,
+      RF: 0,
+      AT: 34.5,
+      fromDate: "2024-04-01",
+      toDate: "2024-04-30"
+    }
+  },
+  {
+    name: "Pune",
+    state: "Maharashtra",
+    weather: "bad",
+    latlng: [18.5204, 73.8567],
+    airQuality: {
+      PM25: 65,
+      PM10: 115,
+      NO: 28,
+      NO2: 38,
+      NOx: 48,
+      NH3: 18,
+      SO2: 23,
+      CO: 1.8,
+      Ozone: 52,
+      Benzene: 7,
+      Toluene: 10,
+      Temp: 33,
+      RH: 68,
+      WS: 2.3,
+      WD: 195,
+      SR: 575,
+      BP: 755,
+      VWS: 1.15,
+      Xylene: 5,
+      RF: 0,
+      AT: 37.5,
+      fromDate: "2024-04-01",
+      toDate: "2024-04-30"
+    }
+  },
+  {
+    name: "Kochi",
+    state: "Kerala",
+    weather: "moderate",
+    latlng: [9.9312, 76.2673],
+    airQuality: {
+      PM25: 58,
+      PM10: 108,
+      NO: 24,
+      NO2: 34,
+      NOx: 44,
+      NH3: 14,
+      SO2: 19,
+      CO: 1.65,
+      Ozone: 48,
+      Benzene: 6.5,
+      Toluene: 9.5,
+      Temp: 31.5,
+      RH: 63,
+      WS: 2.05,
+      WD: 180,
+      SR: 530,
+      BP: 760,
+      VWS: 1,
+      Xylene: 4.25,
+      RF: 0,
+      AT: 37,
+      fromDate: "2024-04-01",
+      toDate: "2024-04-30"
+    }
+  },
+  {
+    name: "Bopal",
+    state: "Gujarat",
+    weather: "severe",
+    latlng: [23.0246, 72.5160],
+    airQuality: {
+      PM25: 85,
+      PM10: 135,
+      NO: 40,
+      NO2: 50,
+      NOx: 60,
+      NH3: 30,
+      SO2: 35,
+      CO: 2.3,
+      Ozone: 65,
+      Benzene: 9,
+      Toluene: 12,
+      Temp: 37,
+      RH: 80,
+      WS: 3,
+      WD: 220,
+      SR: 700,
+      BP: 740,
+      VWS: 1.4,
+      Xylene: 7,
+      RF: 0,
+      AT: 39,
+      fromDate: "2024-04-01",
+      toDate: "2024-04-30"
+    }
+  },
+  {
+    name: "Lucknow",
+    state: "Uttar Pradesh",
+    weather: "good",
+    latlng: [26.8467, 80.9462],
+    airQuality: {
+      PM25: 48,
+      PM10: 98,
+      NO: 17,
+      NO2: 27,
+      NOx: 37,
+      NH3: 7,
+      SO2: 12,
+      CO: 1.3,
+      Ozone: 40,
+      Benzene: 3,
+      Toluene: 6,
+      Temp: 28,
+      RH: 55,
+      WS: 1.8,
+      WD: 170,
+      SR: 450,
+      BP: 770,
+      VWS: 0.9,
+      Xylene: 2.5,
+      RF: 0,
+      AT: 33,
+      fromDate: "2024-04-01",
+      toDate: "2024-04-30"
+    }
+  }
+];
+
+// Function to set color based on weather
+function getColor(weather) {
+  switch (weather) {
+    case "good":
+      return "green";
+    case "moderate":
+      return "yellow";
+    case "bad":
+      return "orange";
+    case "severe":
+      return "red";
+    default:
+      return "gray";
+  }
+}
+
+// Initialize the map
+const map = L.map('map').setView([20.5937, 78.9629], 5); // Centered on India
+
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+}).addTo(map);
+
+// Add markers for each city
+cities.forEach(city => {
+  const marker = L.circleMarker(city.latlng, {
+    radius: 10,
+    fillColor: getColor(city.weather),
+    color: "#000",
+    weight: 1,
+    opacity: 1,
+    fillOpacity: 0.8
+  }).addTo(map);
+  
+  marker.bindPopup(`<p>City Name</p>${city.name}<br><p>City Weather</p>${city.weather}<br><p>City NO2</p>${city.airQuality.NO2}<br><p>City CO</p>${city.airQuality.CO}<br><p>City SO2</p>${city.airQuality.SO2}<br><p>City Ozone</p>${city.airQuality.Ozone}<br><p>City Tempeature</p>${city.airQuality.Temp}<br><p>City Wind Speed</p>${city.airQuality.WS}`);
+});
+
+
+</script>
+{% endblock %}

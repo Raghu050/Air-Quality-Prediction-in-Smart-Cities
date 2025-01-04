@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Data Charts</title>
+    <!-- Include Chart.js library -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Include Moment.js library for date handling -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+</head>
+<body>
+    <!-- Canvas element to render the chart -->
+    <canvas id="pm10Chart" width="800" height="400"></canvas>
+
+    <script>
+        // Data object containing PM10 values and timestamps
+        const data = {
+            "hourly": {
+                "time": [
+                    "2024-04-27T16:00",
+                    "2024-04-27T17:00",
+                    // Add remaining timestamps here...
+                ],
+                "pm10": [
+                    36.6,
+                    36.1,
+                    // Add remaining PM10 values here...
+                ]
+            }
+        };
+
+        // Extract timestamps and PM10 values from the data object
+        const timestamps = data.hourly.time;
+        const pm10Values = data.hourly.pm10;
+
+        // Create a Chart.js line chart
+        const ctx = document.getElementById('pm10Chart').getContext('2d');
+        const pm10Chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: timestamps.map(timestamp => moment(timestamp).format('MMM D, h:mm a')),
+                datasets: [{
+                    label: 'PM10 (μg/m³)',
+                    data: pm10Values,
+                    borderColor: 'rgb(255, 99, 132)',
+                    borderWidth: 1,
+                    fill: false
+                }]
+            },
+            options: {
+                responsive: false,
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Time'
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'PM10 (μg/m³)'
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

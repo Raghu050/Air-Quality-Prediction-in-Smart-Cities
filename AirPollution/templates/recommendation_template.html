@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}
+{% endblock %}
+
+{% block style %}
+<!-- Include Materialize CSS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+<style>
+    /* Internal CSS styles */
+    h1 {
+        text-align: center;
+        margin-top: 50px;
+    }
+
+    table {
+        width: 80%;
+        margin: 0 auto;
+    }
+</style>
+{% endblock %}
+
+{% block index %}
+{% endblock %}
+
+{% block content %}
+<h1>2024 Pollution Level Prediction</h1>
+<table class="striped">
+    <thead>
+        <tr>
+            <th>District</th>
+            <th>Prediction Pollution Level</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for district, pollution_level in recommendation_2024.items %}
+        <tr>
+            <td>{{ district }}</td>
+            <td>{{ pollution_level }} ppm</td> 
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
+
+{% block script %}
+<!-- Include Materialize JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+{% endblock %}
